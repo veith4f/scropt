@@ -1,12 +1,3 @@
- _______ _______  ______  _____   _____  _______
- |______ |       |_____/ |     | |_____]    |   
- ______| |_____  |    \_ |_____| |          |   
-
- Script Operator for Kubernetes
-
-
- ## Example
- ```yaml
 apiVersion: scripts.scropt.io/v1
 kind: LuaScript
 metadata:
@@ -27,5 +18,3 @@ spec:
       print("")
     end
     log("all done")
-
- ```

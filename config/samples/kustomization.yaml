@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- scripts_v1_luascript.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples
