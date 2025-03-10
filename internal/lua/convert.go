@@ -1,4 +1,4 @@
-package klua
+package lua
 
 import (
 	"fmt"
