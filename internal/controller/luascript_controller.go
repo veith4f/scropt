@@ -26,8 +26,8 @@ import (
 
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	"github.com/veith4f/klua"
 	scrv1 "github.com/veith4f/scropt/api/v1"
+	lua "github.com/veith4f/scropt/internal/lua"
 )
 
 // LuaScriptReconciler reconciles a LuaScript object
@@ -78,7 +78,7 @@ func (r *LuaScriptReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	scriptCopy := script.DeepCopy()
 
 	// Execute Lua script
-	if err := klua.Exec(ctx, script.Spec.Code, r.Client); err != nil {
+	if err := lua.Exec(ctx, script.Spec.Code, r.Client); err != nil {
 		scriptCopy.Status.Output = fmt.Sprintf("Error: %v", err)
 	} else {
 		scriptCopy.Status.Output = "Executed"
