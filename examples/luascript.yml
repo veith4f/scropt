@@ -5,7 +5,7 @@ metadata:
 spec:
   code: |
     log("Hello, I am Lua!")
-    for _, p in pairs({ctx, client, core}) do
+    for _, p in pairs({ctx, discovery, client, core}) do
       if p["__NAME__"] ~= nil then
           print(p["__NAME__"])
       elseif p["__TYPE__"] ~= nil then
@@ -19,6 +19,10 @@ spec:
       end
       print("")
     end
+    apiResources = discovery.ServerPreferredResources()
+    for key, apiResourceList in pairs(apiResources) do 
+      print("API Group:\n", apiResourceList.__PTR__)
+    end
     --[[
     local podList = core.PodList:new()
     for k, v in pairs(podList:get()) do
@@ -27,7 +31,6 @@ spec:
     local listOptions = client.ListOptions:new()
     client.List(ctx, podList, listOptions)
     local result = podList:get()
-    log("result is in")
     for _, v in ipairs(result.Items) do
       print(v)
       print("")

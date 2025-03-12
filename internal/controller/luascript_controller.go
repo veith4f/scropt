@@ -39,6 +39,7 @@ type LuaScriptReconciler struct {
 // +kubebuilder:rbac:groups=scripts.scropt.io,resources=luascripts,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=scripts.scropt.io,resources=luascripts/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=scripts.scropt.io,resources=luascripts/finalizers,verbs=update
+// +kubebuilder:rbac:groups=*,resources=*,verbs=get;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
