@@ -87,17 +87,17 @@ func goValToLua(L *lua.LState, val reflect.Value) lua.LValue {
 
 		if val.IsNil() {
 			__ptr__.Value = nil
-			L.SetField(result, "__ptr__", __ptr__)
-			L.SetField(result, "__type__", lua.LNil)
+			L.SetField(result, TABLE_PTR, __ptr__)
+			L.SetField(result, TABLE_TYPE, lua.LNil)
 			return result
 		}
 
 		__ptr__.Value = val.Interface()
-		L.SetField(result, "__ptr__", __ptr__)
+		L.SetField(result, TABLE_PTR, __ptr__)
 
 		__type__ := L.NewUserData()
 		__type__.Value = val.Elem().Type() // Safe now
-		L.SetField(result, "__type__", __type__)
+		L.SetField(result, TABLE_TYPE, __type__)
 
 		return result
 
@@ -107,11 +107,11 @@ func goValToLua(L *lua.LState, val reflect.Value) lua.LValue {
 
 		__struct__ := L.NewUserData()
 		__struct__.Value = val.Interface()
-		L.SetField(result, "__struct__", __struct__)
+		L.SetField(result, TABLE_STRUCT, __struct__)
 
 		__type__ := L.NewUserData()
 		__type__.Value = structType
-		L.SetField(result, "__type__", __type__)
+		L.SetField(result, TABLE_TYPE, __type__)
 
 		for i := 0; i < structType.NumField(); i++ {
 			fieldVal := val.Field(i)

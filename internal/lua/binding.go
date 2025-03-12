@@ -245,6 +245,8 @@ func addObject(L *lua.LState, objName string, obj reflect.Value) error {
 
 func addNamespace(L *lua.LState, name string) *lua.LTable {
 	ns := L.NewTable()
+	ns.RawSetString(TABLE_NAME, lua.LString(name))
+	ns.RawSetString(TABLE_TYPE, lua.LString("namespace"))
 	L.SetGlobal(name, ns)
 	return ns
 }

@@ -4,7 +4,21 @@ metadata:
   name: example
 spec:
   code: |
-    log("hello")
+    log("Hello, I am Lua!")
+    for _, p in pairs({ctx, client, core}) do
+      if p["__NAME__"] ~= nil then
+          print(p["__NAME__"])
+      elseif p["__TYPE__"] ~= nil then
+          print(p["__TYPE__"])
+      else
+        print("")
+      end
+      print("-------------------------------------------")
+      for k, v in pairs(p) do 
+        print(k, v)
+      end
+      print("")
+    end
     --[[
     local podList = core.PodList:new()
     for k, v in pairs(podList:get()) do
@@ -19,4 +33,3 @@ spec:
       print("")
     end
     --]]
-    log("all done")
