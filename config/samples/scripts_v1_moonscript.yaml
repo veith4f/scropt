@@ -1,0 +1,9 @@
+apiVersion: scripts.scropt.io/v1
+kind: MoonScript
+metadata:
+  labels:
+    app.kubernetes.io/name: scropt
+    app.kubernetes.io/managed-by: kustomize
+  name: moonscript-sample
+spec:
+  # TODO(user): Add fields here

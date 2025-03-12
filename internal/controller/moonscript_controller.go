@@ -22,49 +22,48 @@ import (
 	"log"
 
 	"k8s.io/apimachinery/pkg/runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	scrv1 "github.com/veith4f/scropt/api/v1"
 	lua "github.com/veith4f/scropt/internal/lua"
 )
 
-// LuaScriptReconciler reconciles a LuaScript object
-type LuaScriptReconciler struct {
+// MoonScriptReconciler reconciles a MoonScript object
+type MoonScriptReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=scripts.scropt.io,resources=luascripts,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=scripts.scropt.io,resources=luascripts/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=scripts.scropt.io,resources=luascripts/finalizers,verbs=update
+// +kubebuilder:rbac:groups=scripts.scropt.io,resources=moonscripts,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=scripts.scropt.io,resources=moonscripts/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=scripts.scropt.io,resources=moonscripts/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
-// the LuaScript object against the actual cluster state, and then
+// the MoonScript object against the actual cluster state, and then
 // perform operations to make the cluster state reflect the state specified by
 // the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.20.2/pkg/reconcile
-func (r *LuaScriptReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *MoonScriptReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 
 	// Fetch Script resource
-	script := &scrv1.LuaScript{}
+	script := &scrv1.MoonScript{}
 	if err := r.Get(ctx, req.NamespacedName, script); err != nil {
-		log.Printf("LuaScript resource not found, ignoring")
+		log.Printf("MoonScript resource not found, ignoring")
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
 	if script.Spec.Code == "" {
-		log.Printf("Ignoring empty LuaScript: %s", fqn(script.ObjectMeta))
+		log.Printf("Ignoring empty MoonScript: %s", fqn(script.ObjectMeta))
 		return ctrl.Result{}, nil
 	}
 
 	if script.Status.Output == "Executed" {
-		log.Printf("Ignoring already executed LuaScript: %s", fqn(script.ObjectMeta))
+		log.Printf("Ignoring already executed MoonScript: %s", fqn(script.ObjectMeta))
 		return ctrl.Result{}, nil
 	}
 
@@ -75,16 +74,25 @@ func (r *LuaScriptReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	patch := client.MergeFrom(script)
 	scriptCopy := script.DeepCopy()
 
-	// Execute Lua script
-	log.Printf("Executing LuaScript: %s", fqn(script.ObjectMeta))
-	if err := lua.Exec(ctx, script.Spec.Code, r.Client); err != nil {
+	// Compile MoonScript to Lua
+	log.Printf("Compiling MoonScript: %s", fqn(script.ObjectMeta))
+	luascript, err := lua.CompileMoonscript(script.Spec.Code)
+	if err != nil {
+		log.Printf("Error compiling MoonScript: %v", err)
+		return ctrl.Result{}, err
+	}
+
+	// Execute compiled MoonScript
+	log.Printf("Executing MoonScript: %s", fqn(script.ObjectMeta))
+	log.Printf("Compiled Lua code: --[\n%s\n]]--", luascript)
+	if err := lua.Exec(ctx, luascript, r.Client); err != nil {
 		scriptCopy.Status.Output = fmt.Sprintf("Error: %v", err)
 	} else {
 		scriptCopy.Status.Output = "Executed"
 	}
 
 	if err := r.Status().Patch(ctx, script, patch); err != nil {
-		log.Printf("Failed updating LuaScript status to %v: %s", err, fqn(script.ObjectMeta))
+		log.Printf("Failed updating MoonScript status to %v: %s", err, fqn(script.ObjectMeta))
 		return ctrl.Result{}, err
 	}
 
@@ -92,9 +100,9 @@ func (r *LuaScriptReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *LuaScriptReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *MoonScriptReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&scrv1.LuaScript{}).
-		Named("luascript").
+		For(&scrv1.MoonScript{}).
+		Named("moonscript").
 		Complete(r)
 }

@@ -14,6 +14,7 @@ func Exec(ctx context.Context, code string, cli client.Client) error {
 
 	L := lua.NewState()
 	defer L.Close()
+	withLoader(L)
 
 	addFunction(L, nil, "print", reflect.ValueOf(fmt.Println))
 	addFunction(L, nil, "log", reflect.ValueOf(log.Printf))

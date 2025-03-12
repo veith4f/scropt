@@ -8,6 +8,7 @@ rules:
   - scripts.scropt.io
   resources:
   - luascripts
+  - moonscripts
   verbs:
   - create
   - delete
@@ -20,12 +21,14 @@ rules:
   - scripts.scropt.io
   resources:
   - luascripts/finalizers
+  - moonscripts/finalizers
   verbs:
   - update
 - apiGroups:
   - scripts.scropt.io
   resources:
   - luascripts/status
+  - moonscripts/status
   verbs:
   - get
   - patch

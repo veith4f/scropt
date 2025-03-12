@@ -1,0 +1,11 @@
+apiVersion: scripts.scropt.io/v1
+kind: MoonScript
+metadata:
+  name: example
+spec:
+  code: |
+    msg = "Hello, "
+    msg ..= "world"
+    msg ..= "!"
+
+    print(msg)

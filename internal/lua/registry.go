@@ -15,16 +15,16 @@ type Registry struct {
 	types map[string]reflect.Type
 }
 
-var instance *Registry
-var once sync.Once
+var registry *Registry
+var onceRegistry sync.Once
 
 func GetRegistry() *Registry {
-	once.Do(initRegistry) // calling the private function inside the public function
-	return instance
+	onceRegistry.Do(initRegistry)
+	return registry
 }
 
 func initRegistry() {
-	instance = &Registry{
+	registry = &Registry{
 		types: make(map[string]reflect.Type),
 	}
 
@@ -305,7 +305,7 @@ func initRegistry() {
 		&v1.WeightedPodAffinityTerm{},
 		&v1.WindowsSecurityContextOptions{},
 	} {
-		instance.Register(reflect.ValueOf(v))
+		registry.Register(reflect.ValueOf(v))
 	}
 }
 
