@@ -11,6 +11,12 @@ func CompileMoonscript(moonScript string) (string, error) {
 	L := lua.NewState()
 	defer L.Close()
 
+	// add project assets
+	if err := L.DoString(`package.path = package.path .. 
+			";modules/lua/?.lua;modules/lua/?/init.lua"`); err != nil {
+		return "", err
+	}
+
 	L.SetGlobal("__moonscript_code", lua.LString(moonScript))
 
 	if err := L.DoString(`

@@ -18,6 +18,12 @@ func Exec(ctx context.Context, code string, cli client.Client) error {
 
 	libs.Preload(L)
 
+	// add project assets
+	if err := L.DoString(`package.path = package.path .. 
+			";modules/lua/?.lua;modules/lua/?/init.lua"`); err != nil {
+		return err
+	}
+
 	addFunction(L, nil, "print", reflect.ValueOf(fmt.Println))
 	addFunction(L, nil, "log", reflect.ValueOf(log.Printf))
 
