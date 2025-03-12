@@ -23,12 +23,11 @@ Following names are currently defined at the global scope.
 - core: types from core package ("k8s.io/api/core/v1")
 
  ## Examples
-```yaml
+```markdown
 [View moonscript.yml](./examples/moonscript.yaml)
-```
- ```yaml
+ 
+ ```markdown
 [View luascript.yml](./examples/luascript.yaml)
- ```
 
  ## List of exposed tables
  ```text
