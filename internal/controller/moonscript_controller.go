@@ -84,7 +84,6 @@ func (r *MoonScriptReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 
 	// Execute compiled MoonScript
 	log.Printf("Executing MoonScript: %s", fqn(script.ObjectMeta))
-	log.Printf("Compiled Lua code: --[\n%s\n]]--", luascript)
 	if err := lua.Exec(ctx, luascript, r.Client); err != nil {
 		scriptCopy.Status.Output = fmt.Sprintf("Error: %v", err)
 	} else {
