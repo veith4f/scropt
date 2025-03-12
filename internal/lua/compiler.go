@@ -11,8 +11,6 @@ func CompileMoonscript(moonScript string) (string, error) {
 	L := lua.NewState()
 	defer L.Close()
 
-	withLoader(L)
-
 	L.SetGlobal("__moonscript_code", lua.LString(moonScript))
 
 	if err := L.DoString(`

@@ -6,6 +6,7 @@ import (
 	"log"
 	"reflect"
 
+	libs "github.com/vadv/gopher-lua-libs"
 	lua "github.com/yuin/gopher-lua"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -14,7 +15,8 @@ func Exec(ctx context.Context, code string, cli client.Client) error {
 
 	L := lua.NewState()
 	defer L.Close()
-	//withLoader(L)
+
+	libs.Preload(L)
 
 	addFunction(L, nil, "print", reflect.ValueOf(fmt.Println))
 	addFunction(L, nil, "log", reflect.ValueOf(log.Printf))
