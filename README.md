@@ -8,11 +8,11 @@ Script Operator for Kubernetes
 ```
 
 ## Overview
-ScrOpt adds scripting to kubernetes by exposing api methods available to the controller to `Lua` (https://www.lua.org/) or `Moonscript` (https://moonscript.org/). It defines Custom Resources `LuaScript` and `Moonscript` that can be created as resources and executes them in the respective controller's reconcile method. 
+`ScrOpt` adds scripting to kubernetes by exposing api methods available to the controller to `Lua` (https://www.lua.org/) or `Moonscript` (https://moonscript.org/). It defines Custom Resources `LuaScript` and `Moonscript` that can be created as resources and executes them in the respective controller's reconcile method. 
 
-ScrOpt uses https://github.com/yuin/gopher-lua in order to expose functions, types and values to the Lua scripting layer relying on a combination of reflection and static techniques in order to create the binding. See `internal/lua/bindind.go` for details. 
+`ScrOpt` uses https://github.com/yuin/gopher-lua in order to expose functions, types and values to the `Lua` scripting layer relying on a combination of reflection and static techniques in order to create the binding. See `internal/lua/binding.go` for details. 
 
-`Moonscript` is a convenience language that compiles to Lua and any Custom Resource Moonscript ultimately executes as Lua code in the very same environment.
+`Moonscript` is a convenience language that compiles to `Lua` and any Custom Resource `Moonscript` ultimately executes as `Lua` code in the very same environment.
 
 ## Binding
 Following names are currently defined at the global scope.
