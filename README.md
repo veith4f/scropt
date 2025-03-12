@@ -23,11 +23,61 @@ Following names are currently defined at the global scope.
 - core: types from core package ("k8s.io/api/core/v1")
 
  ## Examples
-```markdown
-[View moonscript.yml](./examples/moonscript.yaml)
+```yaml
+apiVersion: scripts.scropt.io/v1
+kind: MoonScript
+metadata:
+  name: example
+spec:
+  code: |
+    class Thing
+      name: "unknown"
+
+    class Person extends Thing
+      say_name: => print "Hello, I am #{@name}!"
+
+    with Person!
+      .name = "MoonScript"
+      \say_name!
+```
  
- ```markdown
-[View luascript.yml](./examples/luascript.yaml)
+```yaml
+apiVersion: scripts.scropt.io/v1
+kind: LuaScript
+metadata:
+  name: example
+spec:
+  code: |
+    log("Hello, I am Lua!")
+    for _, p in pairs({ctx, client, core}) do
+      if p["__NAME__"] ~= nil then
+          print(p["__NAME__"])
+      elseif p["__TYPE__"] ~= nil then
+          print(p["__TYPE__"])
+      else
+        print("")
+      end
+      print("-------------------------------------------")
+      for k, v in pairs(p) do 
+        print(k, v)
+      end
+      print("")
+    end
+    --[[
+    local podList = core.PodList:new()
+    for k, v in pairs(podList:get()) do
+        print(k, v)
+    end
+    local listOptions = client.ListOptions:new()
+    client.List(ctx, podList, listOptions)
+    local result = podList:get()
+    log("result is in")
+    for _, v in ipairs(result.Items) do
+      print(v)
+      print("")
+    end
+    --]]
+```
 
  ## List of exposed tables
  ```text
