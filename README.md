@@ -102,8 +102,8 @@ spec:
 ```
 
 ## Getting started
-- `make install`: reate the CRDs in your cluster
-- `kubectl apply -f examples`: Create example scripts in your cluster
+- `make install`: create the CRDs in your cluster
+- `kubectl apply -f examples`: create example scripts in your cluster
 - `make build`: build local
 - `bin/scropt`: reconcile the managers, i.e. compile/execute any deployed scripts
 - `make docker-build`: build docker containers
