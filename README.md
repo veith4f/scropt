@@ -105,7 +105,7 @@ spec:
 - `make install`: create the CRDs in your cluster
 - `kubectl apply -f examples`: create example scripts in your cluster
 - `make build`: build local
-- `bin/manager`: reconcile the managers, i.e. compile/execute any deployed scripts
+- `bin/scropt`: reconcile the managers, i.e. compile/execute any deployed scripts
 - `make docker-build`: build docker containers
 - `make docker-push`: push docker containers. Edit IMG in Makefile to set repository.
 
