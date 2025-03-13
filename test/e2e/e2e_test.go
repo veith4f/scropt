@@ -46,7 +46,7 @@ const metricsRoleBindingName = "scropt-metrics-binding"
 var _ = Describe("Manager", Ordered, func() {
 
 	format.MaxLength = 0
-	
+
 	var controllerPodName string
 
 	// Before running the tests, set up the environment by creating the namespace,
