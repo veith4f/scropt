@@ -26,6 +26,7 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	. "github.com/onsi/gomega/format"
 
 	"github.com/veith4f/scropt/test/utils"
 )
@@ -43,6 +44,9 @@ const metricsServiceName = "scropt-controller-manager-metrics-service"
 const metricsRoleBindingName = "scropt-metrics-binding"
 
 var _ = Describe("Manager", Ordered, func() {
+
+	format.MaxLength = 100000
+	
 	var controllerPodName string
 
 	// Before running the tests, set up the environment by creating the namespace,
