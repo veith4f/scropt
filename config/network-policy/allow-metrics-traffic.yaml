@@ -12,7 +12,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      control-plane: scropt
+      control-plane: controller-manager
       app.kubernetes.io/name: scropt
   policyTypes:
     - Ingress
