@@ -45,7 +45,7 @@ const metricsRoleBindingName = "scropt-metrics-binding"
 
 var _ = Describe("Manager", Ordered, func() {
 
-	format.MaxLength = 100000
+	format.MaxLength = 0
 	
 	var controllerPodName string
 
