@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    control-plane: scropt
+    control-plane: controller-manager
     app.kubernetes.io/name: scropt
     app.kubernetes.io/managed-by: kustomize
   name: system
@@ -10,16 +10,16 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scropt
+  name: controller-manager
   namespace: system
   labels:
-    control-plane: scropt
+    control-plane: controller-manager
     app.kubernetes.io/name: scropt
     app.kubernetes.io/managed-by: kustomize
 spec:
   selector:
     matchLabels:
-      control-plane: scropt
+      control-plane: controller-manager
       app.kubernetes.io/name: scropt
   replicas: 1
   template:
@@ -27,7 +27,7 @@ spec:
       annotations:
         kubectl.kubernetes.io/default-container: manager
       labels:
-        control-plane: scropt
+        control-plane: controller-manager
         app.kubernetes.io/name: scropt
     spec:
       # TODO(user): Uncomment the following code to configure the nodeAffinity expression
@@ -94,5 +94,5 @@ spec:
             memory: 64Mi
         volumeMounts: []
       volumes: []
-      serviceAccountName: scropt
+      serviceAccountName: controller-manager
       terminationGracePeriodSeconds: 10
