@@ -15,12 +15,34 @@ Script Operator for Kubernetes
 `Moonscript` is a convenience language that compiles to `Lua` and any Custom Resource `Moonscript` ultimately executes as `Lua` code in the very same environment.
 
 ## Binding
-Following names are currently defined at the global scope.
+Following names are currently defined at the global scope. 
 - log: format string compatible print function that prepends timestamps
 - print: format string compatible print function
 - ctx: methods and types from controller's context.Context object ("context")
+- discovery: methods and types from discovery.DiscoveryClient ("k8s.io/client-go/discovery")
 - client: methods and types from controllers's client.Client object ("sigs.k8s.io/controller-runtime/pkg/client") 
 - core: types from core package ("k8s.io/api/core/v1")
+
+Exposing `Go` constructs to `Lua` is mostly automated and requires very little effort.
+```golang
+addFunction(L, nil, "print", reflect.ValueOf(fmt.Println))
+addFunction(L, nil, "log", reflect.ValueOf(log.Printf))
+
+if err := addObject(L, "ctx", reflect.ValueOf(ctx)); err != nil {
+  return err
+}
+
+if err := addObject(L, "discovery", reflect.ValueOf(discoveryClient)); err != nil {
+  return err
+}
+
+if err := addObject(L, "client", reflect.ValueOf(cli)); err != nil {
+  return err
+}
+
+coreNs := addNamespace(L, "core")
+addTypes(L, coreNs, "k8s.io/api/core/v1")
+```
 
  ## Examples
 ```yaml
@@ -110,6 +132,22 @@ WithTimeout function: 0x14001c4ff00
 WithTimeoutCause function: 0x14000ab2000
 WithValue function: 0x14000ab2080
 WithoutCancel function: 0x14000ab2100
+
+discovery.DiscoveryClient
+-------------------------------------------
+__PTR__ &{0x140009b0320 /api false}
+__TYPE__ discovery.DiscoveryClient
+GroupsAndMaybeResources function: 0x140022aa1c0
+OpenAPISchema function: 0x140022aa240
+OpenAPIV3 function: 0x140022aa280
+RESTClient function: 0x140022aa2c0
+ServerGroups function: 0x140022aa300
+ServerGroupsAndResources function: 0x140022aa3c0
+ServerPreferredNamespacedResources function: 0x140022aa400
+ServerPreferredResources function: 0x140022aa440
+ServerResourcesForGroupVersion function: 0x140022aa480
+ServerVersion function: 0x140022aa4c0
+WithLegacy function: 0x140022aa500
 
 client.client
 -------------------------------------------
