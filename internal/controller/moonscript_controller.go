@@ -63,7 +63,7 @@ func (r *MoonScriptReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		return ctrl.Result{}, nil
 	}
 
-	if script.Status.Output == "Executed" {
+	if script.Status.Output == CONTROLLER_SCRIPT_EXECUTED {
 		log.Printf("Ignoring already executed MoonScript: %s", fqn(script.ObjectMeta))
 		return ctrl.Result{}, nil
 	}
@@ -88,7 +88,7 @@ func (r *MoonScriptReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	if err := lua.Exec(ctx, luascript, r.Client); err != nil {
 		scriptCopy.Status.Output = fmt.Sprintf("Error: %v", err)
 	} else {
-		scriptCopy.Status.Output = "Executed"
+		scriptCopy.Status.Output = CONTROLLER_SCRIPT_EXECUTED
 	}
 
 	if err := r.Status().Patch(ctx, script, patch); err != nil {

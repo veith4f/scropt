@@ -164,11 +164,14 @@ func addType(L *lua.LState, namespace *lua.LTable, typ reflect.Type) {
 		if nargs == 2 {
 			L.Push(instance) // Push the instance (self)
 			L.Push(L.Get(2)) // Push the table (argument 2)
-			L.CallByParam(lua.P{
+			if err := L.CallByParam(lua.P{
 				Fn:      L.GetField(class, "set"),
 				NRet:    0,
 				Protect: true,
-			})
+			}); err != nil {
+				L.RaiseError("%s", err)
+				return 0
+			}
 		}
 
 		// Push the new instance to the Lua stack
@@ -245,8 +248,8 @@ func addObject(L *lua.LState, objName string, obj reflect.Value) error {
 
 func addNamespace(L *lua.LState, name string) *lua.LTable {
 	ns := L.NewTable()
-	ns.RawSetString(TABLE_NAME, lua.LString(name))
-	ns.RawSetString(TABLE_TYPE, lua.LString("namespace"))
+	ns.RawSetString(LUA_TABLE_NAME, lua.LString(name))
+	ns.RawSetString(LUA_TABLE_TYPE, lua.LString("namespace"))
 	L.SetGlobal(name, ns)
 	return ns
 }

@@ -22,15 +22,14 @@ func luaValToGo(val lua.LValue) any {
 			return result
 		}
 		// or map
-		//typ := v.RawGetString("__type__")
 		result := make(map[string]any)
 		// if it is a map it may be a ptr
-		maybePtr := v.RawGetString("__ptr__")
+		maybePtr := v.RawGetString(LUA_TABLE_PTR)
 		if maybePtr != lua.LNil {
 			return maybePtr.(*lua.LUserData).Value
 		}
 		// or a struct
-		maybeStruct := v.RawGetString("__struct__")
+		maybeStruct := v.RawGetString(LUA_TABLE_STRUCT)
 		if maybeStruct != lua.LNil {
 			return maybeStruct.(*lua.LUserData).Value
 		}
@@ -51,8 +50,10 @@ func luaValToGo(val lua.LValue) any {
 		return f
 	case lua.LBool:
 		return bool(v)
+	case *lua.LFunction:
+		return v.String()
 	default:
-		//fmt.Printf("Don't know how to convert %s to go using string\n", v.Type().String())
+		// fmt.Printf("Don't know how to convert %s to go using string\n", v.Type().String())
 		return v.String()
 	}
 }
@@ -87,17 +88,17 @@ func goValToLua(L *lua.LState, val reflect.Value) lua.LValue {
 
 		if val.IsNil() {
 			__ptr__.Value = nil
-			L.SetField(result, TABLE_PTR, __ptr__)
-			L.SetField(result, TABLE_TYPE, lua.LNil)
+			L.SetField(result, LUA_TABLE_PTR, __ptr__)
+			L.SetField(result, LUA_TABLE_TYPE, lua.LNil)
 			return result
 		}
 
 		__ptr__.Value = val.Interface()
-		L.SetField(result, TABLE_PTR, __ptr__)
+		L.SetField(result, LUA_TABLE_PTR, __ptr__)
 
 		__type__ := L.NewUserData()
 		__type__.Value = val.Elem().Type() // Safe now
-		L.SetField(result, TABLE_TYPE, __type__)
+		L.SetField(result, LUA_TABLE_TYPE, __type__)
 
 		return result
 
@@ -107,11 +108,11 @@ func goValToLua(L *lua.LState, val reflect.Value) lua.LValue {
 
 		__struct__ := L.NewUserData()
 		__struct__.Value = val.Interface()
-		L.SetField(result, TABLE_STRUCT, __struct__)
+		L.SetField(result, LUA_TABLE_STRUCT, __struct__)
 
 		__type__ := L.NewUserData()
 		__type__.Value = structType
-		L.SetField(result, TABLE_TYPE, __type__)
+		L.SetField(result, LUA_TABLE_TYPE, __type__)
 
 		for i := 0; i < structType.NumField(); i++ {
 			fieldVal := val.Field(i)
