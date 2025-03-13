@@ -2,10 +2,10 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    control-plane: scropt
+    control-plane: controller-manager
     app.kubernetes.io/name: scropt
     app.kubernetes.io/managed-by: kustomize
-  name: scropt-metrics-service
+  name: conroller-manager-metrics-service
   namespace: system
 spec:
   ports:
@@ -14,5 +14,5 @@ spec:
     protocol: TCP
     targetPort: 8443
   selector:
-    control-plane: scropt
+    control-plane: controller-manager
     app.kubernetes.io/name: scropt
